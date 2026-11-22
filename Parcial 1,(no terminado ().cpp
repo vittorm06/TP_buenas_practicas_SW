@@ -11,7 +11,7 @@ struct datos{
 };
 struct datos *agregartanque(struct datos *tanques, int *cantidad);
 void mostrarCriticos(struct datos *tanques, int cantidad);
-
+void buscarPorTexto(struct datos *tanques, int cantidad);
 
 int main(int argc, char *argv[]) {
 	
@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 	
 	do{
 	printf("Ingrese una opcion\n");
-	printf(" 1-Agregar tanque.\n 2-Tanques Criticos\n 9-Salir\n");
+	printf(" 1-Agregar tanque.\n 2-Tanques Criticos\n3-Buscar tanques por texto \n9-Salir\n");
 	scanf("%d",&opcion);
 	switch(opcion){
 	case 1:
@@ -30,6 +30,9 @@ int main(int argc, char *argv[]) {
 		break;
 	case 2:
 		mostrarCriticos(tanques, cantidad);
+		break;
+	case 3:
+		buscarPorTexto(tanques, cantidad);
 		break;
 	case 9:
 		printf("adios\n");
@@ -107,4 +110,34 @@ struct datos *agregartanque(struct datos *tanques, int *cantidad){
 		printf("2do Minimo -> Nombre: %s | Sector: %s | Nivel: %d%%\n",
 			   tanques[idxMin2].nombretank, tanques[idxMin2].sector, tanques[idxMin2].nivel);
 	}
+	void buscarPorTexto(struct datos *tanques, int cantidad) {
+		if (cantidad == 0) {
+			printf("\nNo hay tanques cargados.\n");
+			return;
+		}
+		
+		char busqueda[30];
+		char etiqueta[70];
+		int encontrados = 0;
+		
+		printf("\nIngrese silaba o texto a buscar en Nombre o Sector: ");
+		scanf(" %29[^\n]", busqueda);
+		
+		printf("\nResultados que contienen \"%s\":\n", busqueda);
+		for (int i = 0; i < cantidad; i++) {
+			
+			strcpy(etiqueta, tanques[i].sector);
+			strcat(etiqueta, " - ");
+			strcat(etiqueta, tanques[i].nombretank);
 
+			if (strstr(tanques[i].nombretank, busqueda) != NULL ||
+				strstr(tanques[i].sector, busqueda) != NULL) {
+				printf("- [%s] -> Nivel: %d%%\n", etiqueta, tanques[i].nivel);
+				encontrados++;
+			}
+		}
+		
+		if (encontrados == 0) {
+			printf("No se encontraron coincidencias.\n");
+		}
+	}
