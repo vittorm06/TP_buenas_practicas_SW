@@ -10,9 +10,7 @@ struct datos{
 	int nivel;
 };
 struct datos *agregartanque(struct datos *tanques, int *cantidad);
-
-
-
+void mostrarCriticos(struct datos *tanques, int cantidad);
 
 
 int main(int argc, char *argv[]) {
@@ -31,7 +29,7 @@ int main(int argc, char *argv[]) {
 		tanques = agregartanque(tanques,&cantidad);
 		break;
 	case 2:
-		
+		mostrarCriticos(tanques, cantidad);
 		break;
 	case 9:
 		printf("adios\n");
@@ -80,15 +78,33 @@ struct datos *agregartanque(struct datos *tanques, int *cantidad){
 	*cantidad += nuevos; 
 	return tanques;
 }
-	
+	void mostrarCriticos(struct datos *tanques, int cantidad) {
+		if (cantidad == 0) {
+			printf("No hay tanques cargados.\n");
+			return;
+		}
+		
+		if (cantidad == 1) {
+			printf("\nSolo hay 1 tanque cargado:\n");
+			printf("1) Nombre: %s | Sector: %s | Nivel: %d%%\n",
+				   tanques[0].nombretank, tanques[0].sector, tanques[0].nivel);
+			return;
+		}
+		int idxMin1 = -1, idxMin2 = -1;
+		
+		for (int i = 0; i < cantidad; i++) {
+			if (idxMin1 == -1 || tanques[i].nivel < tanques[idxMin1].nivel) {
+				idxMin2 = idxMin1;
+				idxMin1 = i;      
+			} else if (idxMin2 == -1 || tanques[i].nivel < tanques[idxMin2].nivel) {
+				idxMin2 = i;
+			}
+		}
+		
+		printf("\nLOS 2 TANQUES CRITICOS SON\n");
+		printf("1er Minimo -> Nombre: %s | Sector: %s | Nivel: %d%%\n",
+			   tanques[idxMin1].nombretank, tanques[idxMin1].sector, tanques[idxMin1].nivel);
+		printf("2do Minimo -> Nombre: %s | Sector: %s | Nivel: %d%%\n",
+			   tanques[idxMin2].nombretank, tanques[idxMin2].sector, tanques[idxMin2].nivel);
+	}
 
-
-//void mostrar(struct datos tanques[50],int referencia[2]){
-//	for(int i=1;i<51;i++){
-//		if(referencia[i]>tanques[i].nivel){
-//			referencia[i]=tanques[i].nivel
-//		}
-//		
-//	}
-//
-//}
