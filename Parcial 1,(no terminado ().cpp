@@ -3,71 +3,92 @@
 #include <string.h> 
 #include <stdlib.h>
 
-void mostrar(struct datos tanques[50],int referencia[2]);
-//void agregartanque(struct datos *p)
+
 struct datos{
 	char nombretank[20];
 	char sector[20];
 	int nivel;
-	
 };
+struct datos *agregartanque(struct datos *tanques, int *cantidad);
+
+
+
+
+
 int main(int argc, char *argv[]) {
 	
-	int opcion,aux=1,check;
-	int referencia[2]={200,200};
-	int *aux;
-	aux=&referencia;
-	struct datos tanques[50];
+	int opcion, cantidad=0;
+	struct datos *tanques=NULL;
 	
 	
 	
 	do{
 	printf("Ingrese una opcion\n");
-	printf(" 1-Agregar tanque.\n 2-Tanques Criticos\n 5-Salir\n");
+	printf(" 1-Agregar tanque.\n 2-Tanques Criticos\n 9-Salir\n");
 	scanf("%d",&opcion);
 	switch(opcion){
 	case 1:
-		printf("tanque numero %d\n",aux);
-		
-		printf("Nombre del tanque:");
-		scanf("%s",tanques[aux].nombretank);
-		printf("%s",tanques[aux].nombretank);
-		printf("\nSector del tanque:\n");
-		scanf("%s",tanques[aux].sector);
-		printf("%s",tanques[aux].sector);
-		do{
-		printf("Nivel de agua:\n");
-		scanf("%d",&tanques[aux].nivel);
-		if(tanques[aux].nivel>=0 && 100>=tanques[aux].nivel){
-			check=1;
-		}else{
-			printf("porcentaje invalido, ingrese uno entre 0-100\n");
-			check=0;
-		}
-		}while(check!=1);
-		aux++;
-		printf("%d\n",tanques[aux].nivel);
+		tanques = agregartanque(tanques,&cantidad);
 		break;
 	case 2:
-		mostrar(tanques,)
+		
 		break;
-	case 5:
+	case 9:
 		printf("adios\n");
 		break;
 	default:
 		printf("opcion invalida\n");
 		break;
 	}
-}while(opcion!=5);
+}while(opcion!=9);
+	free(tanques);
 	return 0;
 }
-
-void mostrar(struct datos tanques[50],int referencia[2]){
-	for(int i=1;i<51;i++){
-		if(referencia[i]>tanques[i].nivel){
-			referencia[i]=tanques[i].nivel
-		}
-		
+struct datos *agregartanque(struct datos *tanques, int *cantidad){
+	int nuevos, i;
+	printf("\n¿Cuantos tanques desea ingresar?: ");
+	scanf("%d", &nuevos);
+	
+	if (nuevos <= 0) {
+		printf("Cantidad invalida.\n");
+		return tanques;
 	}
-	//PROYECTRO ABANDONADO :( , pero perder una batalla no significa perder la guerra... MTFBWY
+	struct datos *temp = (struct datos*) realloc(tanques, (*cantidad + nuevos) * sizeof(struct datos));//agrega segun cuanto quiere el usuario
+	if (temp == NULL) {
+		printf("Error al asignar memoria.\n");
+		return tanques;
+	}
+	tanques = temp;
+	for (i = 0; i < nuevos; i++) {
+		int indice = *cantidad + i;
+		struct datos *p = &tanques[indice]; //puntero al actual
+		
+		printf("\nTanque #%d \n", indice + 1);
+		printf("Nombre del tanque: ");
+		scanf(" %29[^\n]", p->nombretank); //permite espacios y evita desbordamiento
+		
+		printf("Sector del tanque: ");
+		scanf(" %29[^\n]", p->sector);
+		do {
+			printf("Nivel de agua (1 - 100%%): ");
+			scanf("%d", &p->nivel);
+			if (p->nivel < 1 || p->nivel > 100) {
+				printf("Porcentaje invalido, ingrese un valor entre 1 y 100.\n");
+			}
+		} while (p->nivel < 1 || p->nivel > 100);
+	}	
+	*cantidad += nuevos; 
+	return tanques;
 }
+	
+
+
+//void mostrar(struct datos tanques[50],int referencia[2]){
+//	for(int i=1;i<51;i++){
+//		if(referencia[i]>tanques[i].nivel){
+//			referencia[i]=tanques[i].nivel
+//		}
+//		
+//	}
+//
+//}
